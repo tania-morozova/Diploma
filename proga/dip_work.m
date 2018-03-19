@@ -11,11 +11,11 @@ u_max = 2;
 x_0 = [10,1,1,1]';
 
 t_0 = 0;
-t_1 = 30;
+t_1 = 10;
 
 %%
 
-ok = u_min - (r(3)*b(1) - c(3)*r(1))/c(3) > 0
+ok = u_min - (r(3)*b(1) - c(3)*r(1))/c(3) > 0 %requirement for parameters
 f = @(t,x,u) [x(1).*(r(1) + u - b(1).*x(2)); ...
             x(2).*(-r(2) - b(2).*x(3) + c(2).*x(1));...
             x(3).*(-r(3) - b(3).*x(4) + c(3).*x(2));...
@@ -30,7 +30,7 @@ K = @(x,u) KK(x,u,P,b,c);
 K1 = @(x) K(x,u_min);
 K2 = @(x) K(x,u_max);
 
-delta_t = 10^(-4);
+delta_t = 10^(-5);
 
 
 %%
@@ -46,9 +46,9 @@ end
 options = odeset('Events',@(t,x)events_func(t,x,P_curr));
 
 sol = ode45(@(t,x) f(t,x,u_curr), t_0:delta_t:t_1, x_0, options);
-solut = sol.y;
-time = sol.x;
-mom_switch = numel(time);
+solut = sol.y;      %trajectory
+time = sol.x;       %time
+mom_switch = numel(time);       %for display of switch moments
 time_switch = time(end);
 x_switch = solut(:,end);
 
@@ -66,6 +66,10 @@ while sol.ie
     num = num+1;
 end
 
+mom_switch = mom_switch(1:end-1);
+time_switch = time_switch(1:end-1);
+x_switch = x_switch(:,1:end-1);
+
 %%
 len = numel(solut(1,:));
 K_ev1 = zeros(1,len);
@@ -81,31 +85,44 @@ plot(time, K_ev1, 'r', time, K_ev2, 'g', time_switch, K_ev1(mom_switch), 'b*',..
     time_switch, K_ev2(mom_switch), 'b*')
 xlabel('t');
 ylabel('K');
-legend('K_1','K_2');
+legend('K_1','K_2', 'switches');
 grid minor
 
 %%
+P_curr1 = P(u_min);
+P_curr2 = P(u_max);
+
 figure
 subplot(2,2,1)
-plot(time, solut(1,:), time_switch, x_switch(1,:),'go');
+plot(time, solut(1,:), time_switch, x_switch(1,:),'go',...
+    [min(time) max(time)], [P_curr1(1), P_curr1(1)], 'r');
 xlabel('t');
 ylabel('x_1');
+legend('x_1(t)', 'switches','P_1');
 grid minor    
 
 subplot(2,2,2)
-plot(time, solut(2,:), time_switch, x_switch(2,:),'go');
+plot(time, solut(2,:), time_switch, x_switch(2,:),'go', ...
+    [min(time) max(time)], ones(1,2)*P_curr1(2), 'r', ...
+    [min(time) max(time)], ones(1,2)*P_curr2(2), 'r');
 xlabel('t');
 ylabel('x_2');
+legend('x_2(t)', 'switches','P_2');
 grid minor  
 
 subplot(2,2,3)
-plot(time, solut(3,:), time_switch, x_switch(3,:),'go');
+plot(time, solut(3,:), time_switch, x_switch(3,:),'go', ...
+    [min(time) max(time)], ones(1,2)*P_curr1(3),'r');
 xlabel('t');
 ylabel('x_3');
+legend('x_3(t)', 'switches','P_3');
 grid minor  
 
 subplot(2,2,4)
-plot(time, solut(4,:), time_switch, x_switch(4,:),'go');
+plot(time, solut(4,:), time_switch, x_switch(4,:),'go', ...
+    [min(time) max(time)], ones(1,2)*P_curr1(4), 'r', ...
+    [min(time) max(time)], ones(1,2)*P_curr2(4), 'r');
 xlabel('t');
 ylabel('x_4');
+legend('x_4(t)', 'switches','P_4');
 grid minor  
