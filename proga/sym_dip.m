@@ -19,5 +19,6 @@ KK = subs(subs(K,x1,P1),x2,P2)
 %%
 K2 = (K - K1);
 syms u10 u20
-K0=subs(K,u2,u20);
-dK0 = simplify(diff(K0,x1)*dx1+diff(K0,x2)*dx2+diff(K0,x3)*dx3+diff(K0,x4)*dx4)
+K0=subs(subs(K,u2,u20),u1,u10);
+dK0 = simplify(diff(K0,x1)*dx1+diff(K0,x2)*dx2+diff(K0,x3)*dx3+diff(K0,x4)*dx4);
+d2K0 = simplify(diff(dK0,x1)*dx1+diff(dK0,x2)*dx2+diff(dK0,x3)*dx3+diff(dK0,x4)*dx4)
