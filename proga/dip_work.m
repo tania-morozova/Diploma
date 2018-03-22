@@ -104,7 +104,7 @@ P_curr1 = P(u_min);
 P_curr2 = P(u_max);
 
 figure
-subplot(2,2,1)
+ax1 = subplot(2,2,1);
 plot(time, solut(1,:), time_switch, x_switch(1,:),'go',...
     [min(time) max(time)], [P_curr1(1), P_curr1(1)], 'r');
 xlabel('t');
@@ -112,7 +112,7 @@ ylabel('x_1');
 legend('x_1(t)', 'switches','P_1');
 grid minor    
 
-subplot(2,2,2)
+ax2 = subplot(2,2,2);
 plot(time, solut(2,:), time_switch, x_switch(2,:),'go', ...
     [min(time) max(time)], ones(1,2)*P_curr1(2), 'r', ...
     [min(time) max(time)], ones(1,2)*P_curr2(2), 'r');
@@ -121,7 +121,7 @@ ylabel('x_2');
 legend('x_2(t)', 'switches','P_2');
 grid minor  
 
-subplot(2,2,3)
+ax3 = subplot(2,2,3);
 plot(time, solut(3,:), time_switch, x_switch(3,:),'go', ...
     [min(time) max(time)], ones(1,2)*P_curr1(3),'r');
 xlabel('t');
@@ -129,7 +129,7 @@ ylabel('x_3');
 legend('x_3(t)', 'switches','P_3');
 grid minor  
 
-subplot(2,2,4)
+ax4 = subplot(2,2,4);
 plot(time, solut(4,:), time_switch, x_switch(4,:),'go', ...
     [min(time) max(time)], ones(1,2)*P_curr1(4), 'r', ...
     [min(time) max(time)], ones(1,2)*P_curr2(4), 'r');
@@ -137,3 +137,5 @@ xlabel('t');
 ylabel('x_4');
 legend('x_4(t)', 'switches','P_4');
 grid minor  
+
+linkaxes([ax4,ax3,ax2,ax1],'x'); 
