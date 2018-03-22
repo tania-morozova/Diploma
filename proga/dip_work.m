@@ -11,7 +11,7 @@ u_max = 2;
 x_0 = [10,1,1,1]';
 
 t_0 = 0;
-t_1 = 10;
+t_1 = 30;
 
 %%
 
@@ -34,7 +34,8 @@ delta_t = 10^(-5);
 
 
 %%
-
+P_min = P(u_min);
+P_max = P(u_max);
 P_curr = P(u_min);
 if x_0(1) > P_curr(1)
     u_curr = u_min;
@@ -43,9 +44,11 @@ elseif x_0(1) < P_curr(1)
 else disp('x_0 = P_1');
 end
 
+f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P_curr);
+
 options = odeset('Events',@(t,x)events_func(t,x,P_curr));
 
-sol = ode45(@(t,x) f(t,x,u_curr), t_0:delta_t:t_1, x_0, options);
+sol = ode45(@(t,x) f_s(t,x), t_0:delta_t:t_1, x_0, options);
 solut = sol.y;      %trajectory
 time = sol.x;       %time
 mom_switch = numel(time);       %for display of switch moments
@@ -54,9 +57,12 @@ x_switch = solut(:,end);
 
 num = 0;
 while sol.ie
-    u_curr = u_max - u_curr + u_min;    
-        
-    sol = ode45(@(t,x) f(t,x,u_curr), time(end):delta_t:t_1, solut(:,end), options);
+    %u_curr = u_max - u_curr + u_min;    
+       
+    if t_1-time(end)<delta_t
+        break;
+    end
+    sol = ode45(@(t,x) f_s(t,x), time(end):delta_t:t_1, solut(:,end), options);
     
     solut = [solut, sol.y];
     time = [time, sol.x];
