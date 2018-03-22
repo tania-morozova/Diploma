@@ -11,7 +11,7 @@ u_max = 2;
 x_0 = [10,1,1,1]';
 
 t_0 = 0;
-t_1 = 20;
+t_1 = 50;
 
 %%
 
@@ -44,7 +44,7 @@ elseif x_0(1) < P_curr(1)
 else disp('x_0 = P_1');
 end
 
-f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P_curr);
+f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P,r,b);
 
 options = odeset('Events',@(t,x)events_func(t,x,P_curr));
 
@@ -105,11 +105,11 @@ P_curr2 = P(u_max);
 
 figure
 ax1 = subplot(2,2,1);
-plot(time, solut(1,:), time_switch, x_switch(1,:),'go',...
-    [min(time) max(time)], [P_curr1(1), P_curr1(1)], 'r');
+plot(time, solut(1,:), time_switch, x_switch(1,:),'go');%,...
+    %[min(time) max(time)], [P_curr1(1), P_curr1(1)], 'r');
 xlabel('t');
 ylabel('x_1');
-legend('x_1(t)', 'switches','P_1');
+legend('x_1(t)', 'switches');%,'P_1');
 grid minor    
 
 ax2 = subplot(2,2,2);
