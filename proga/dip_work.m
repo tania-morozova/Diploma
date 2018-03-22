@@ -11,7 +11,7 @@ u_max = 2;
 x_0 = [10,1,1,1]';
 
 t_0 = 0;
-t_1 = 30;
+t_1 = 20;
 
 %%
 
@@ -86,9 +86,14 @@ for i = 1:len
     K_ev2(i) = K2(solut(:,i));
 end
 
+K1_lim = K1(P_min);
+K2_lim = K2(P_max);
+
+%%
 figure
 plot(time, K_ev1, 'r', time, K_ev2, 'g', time_switch, K_ev1(mom_switch), 'b*',...
-    time_switch, K_ev2(mom_switch), 'b*')
+    time_switch, K_ev2(mom_switch), 'b*', [min(time) max(time)], [K1_lim, K1_lim], 'm',...
+    [min(time) max(time)], [K2_lim, K2_lim], 'm')
 xlabel('t');
 ylabel('K');
 legend('K_1','K_2', 'switches');
