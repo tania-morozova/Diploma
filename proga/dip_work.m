@@ -8,13 +8,13 @@ c = [0,1,1,1]';
 u_min1 = [1,0];
 u_max1 = [2,0];
 
-u_min = [1,0];
+u_min = [1,-0.5];
 u_max = [2,2];
 
 x_0 = [10,1,3,1]';
 
 t_0 = 0;
-t_1 = 20;
+t_1 = 30;
 
 %%
 
@@ -36,6 +36,11 @@ K1 = @(x) K(x,u_min);
 K2 = @(x) K(x,[u_max(1),u_min(2)]);
 K3 = @(x) K(x,[u_min(1),u_max(2)]);
 K4 = @(x) K(x,u_max);
+
+V1 = P(u_min);
+V2 = P([u_max(1),u_min(2)]);
+V3 = P([u_min(1),u_max(2)]);
+V4 = P(u_max);
 
 delta_t = 10^(-5);
 
@@ -112,10 +117,10 @@ K_ev2 = zeros(1,len);
 K_ev3 = zeros(1,len);
 K_ev4 = zeros(1,len);
 
-K1_lim = K1(P(u_min));
-K2_lim = K2(P([u_max(1),u_min(2)]));
-K3_lim = K3(P([u_min(1),u_max(2)]));
-K4_lim = K4(P(u_max));
+K1_lim = K1(V1);
+K2_lim = K2(V2);
+K3_lim = K3(V3);
+K4_lim = K4(V4);
 
 for i = 1:len
     K_ev1(i) = K1(solut(:,i));
@@ -144,64 +149,69 @@ grid minor
 hold off
 
 %%
-P_curr1 = P(u_min);
-P_curr2 = P(u_max);
 
 figure
-ax1 = subplot(2,2,1);
+ax1 = subplot(3,2,1);
 plot(time, solut(1,:), time_switch1, x_switch1(1,:),'co',...
     time_switch2, x_switch2(1,:),'mo', ...
-    [min(time) max(time)], [P_curr1(1), P_curr1(1)], 'r');
+    [min(time) max(time)], [V1(1), V1(1)], 'r');
 xlabel('t');
 ylabel('x_1');
 legend('x_1(t)', 'switches1','switches2','P_1');
 grid minor    
 
-ax2 = subplot(2,2,2);
+ax2 = subplot(3,2,2);
 plot(time, solut(2,:), time_switch1, x_switch1(2,:),'co',...
-    time_switch2, x_switch2(2,:),'mo')%, ...
-    %[min(time) max(time)], ones(1,2)*P_curr1(2), 'r', ...
-    %[min(time) max(time)], ones(1,2)*P_curr2(2), 'r');
+    time_switch2, x_switch2(2,:),'mo', ...
+    [min(time) max(time)], [V1(2) V1(2)], 'r', ...
+    [min(time) max(time)], [V2(2) V2(2)], 'r');
 xlabel('t');
 ylabel('x_2');
 legend('x_2(t)', 'switches1','switches2'),%'P_2');
 grid minor  
 
-ax3 = subplot(2,2,3);
+ax3 = subplot(3,2,3);
 plot(time, solut(3,:), time_switch1, x_switch1(3,:),'co', ...
     time_switch2, x_switch2(3,:),'mo',...
-    [min(time) max(time)], ones(1,2)*P_curr1(3),'r');
+    [min(time) max(time)], [V1(3) V1(3)],'r');
 xlabel('t');
 ylabel('x_3');
 legend('x_3(t)', 'switches1','switches2','P_3');
 grid minor  
 
-ax4 = subplot(2,2,4);
+ax4 = subplot(3,2,4);
 plot(time, solut(4,:), time_switch1, x_switch1(4,:),'co',...
-    time_switch2, x_switch2(4,:),'mo')%, ...
-    %[min(time) max(time)], ones(1,2)*P_curr1(4), 'r', ...
-    %[min(time) max(time)], ones(1,2)*P_curr2(4), 'r');
+    time_switch2, x_switch2(4,:),'mo',...
+    [min(time) max(time)], [V1(4) V1(4)], 'r', ...
+    [min(time) max(time)], [V3(4) V3(4)], 'r', ...
+    [min(time) max(time)], [V2(4) V2(4)], 'k', ...
+    [min(time) max(time)], [V4(4) V4(4)], 'k');
 xlabel('t');
 ylabel('x_4');
 legend('x_4(t)', 'switches1','switches2')%,'P_4');
 grid minor  
 
+ax5 = subplot(3,2,5);
+plot(solut(2,:), solut(4,:), solut(2,end), solut(4,end), 'g*', ...
+    [V1(2) V2(2)], [V1(4) V2(4)], 'r', [V2(2) V4(2)], [V2(4) V4(4)], 'r',...
+    [V4(2) V3(2)], [V4(4) V3(4)], 'r', [V3(2) V1(2)], [V3(4) V1(4)], 'r');
+xlabel('x_2');
+ylabel('x_4');
+legend('x_4(x_2)', 'end','P_4,P_2')
+grid minor
+
 linkaxes([ax4,ax3,ax2,ax1],'x'); 
 
 %%
 
-V_1 = P(u_min);
-V_2 = P([u_min(1),u_max(2)]);
-V_3 = P([u_max(1),u_min(2)]);
-V_4 = P(u_max);
-
-mom_temp = min(mom_switch1(end),mom_switch2(end));
+%mom_temp = min(mom_switch1(end),mom_switch2(end));
+mom_temp = 1;
 
 figure
 hold on
 plot3(time(mom_temp:end), solut(2,mom_temp:end), solut(4,mom_temp:end), 'b')
 
-[T,X2] = meshgrid(time(1):time(end),V_1(2):V_3(2));
+[T,X2] = meshgrid(time(1):time(end),V1(2):V2(2));
 
 P4_fun1 = (c(3)*X2 + u_min(2) - r(3))/b(3);
 P4_fun2 = (c(3)*X2 + u_max(2) - r(3))/b(3);
@@ -209,12 +219,12 @@ P4_fun2 = (c(3)*X2 + u_max(2) - r(3))/b(3);
 surf(T,X2,P4_fun1, 'FaceAlpha',0.1);
 surf(T,X2,P4_fun2, 'FaceAlpha',0.1)
 
-[T,X4] = meshgrid(time(1):time(end),V_1(4):V_2(4));
-P2_fun1 = V_1(2) + 0*X4;
+[T,X4] = meshgrid(time(1):time(end),V1(4):V3(4));
+P2_fun1 = V1(2) + 0*X4;
 surf(T,P2_fun1,X4, 'FaceAlpha',0.1);
 
-[T,X4] = meshgrid(time(1):time(end),V_3(4):V_4(4));
-P2_fun1 = V_3(2) + 0*X4;
+[T,X4] = meshgrid(time(1):time(end),V2(4):V4(4));
+P2_fun1 = V2(2) + 0*X4;
 surf(T,P2_fun1,X4, 'FaceAlpha',0.1);
 
 xlabel('t');
