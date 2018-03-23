@@ -14,7 +14,7 @@ u_max = [2,2];
 x_0 = [10,1,3,1]';
 
 t_0 = 0;
-t_1 = 10;
+t_1 = 20;
 
 %%
 
@@ -187,3 +187,37 @@ legend('x_4(t)', 'switches1','switches2')%,'P_4');
 grid minor  
 
 linkaxes([ax4,ax3,ax2,ax1],'x'); 
+
+%%
+
+V_1 = P(u_min);
+V_2 = P([u_min(1),u_max(2)]);
+V_3 = P([u_max(1),u_min(2)]);
+V_4 = P(u_max);
+
+mom_temp = min(mom_switch1(end),mom_switch2(end));
+
+figure
+hold on
+plot3(time(mom_temp:end), solut(2,mom_temp:end), solut(4,mom_temp:end), 'b')
+
+[T,X2] = meshgrid(time(1):time(end),V_1(2):V_3(2));
+
+P4_fun1 = (c(3)*X2 + u_min(2) - r(3))/b(3);
+P4_fun2 = (c(3)*X2 + u_max(2) - r(3))/b(3);
+
+surf(T,X2,P4_fun1, 'FaceAlpha',0.1);
+surf(T,X2,P4_fun2, 'FaceAlpha',0.1)
+
+[T,X4] = meshgrid(time(1):time(end),V_1(4):V_2(4));
+P2_fun1 = V_1(2) + 0*X4;
+surf(T,P2_fun1,X4, 'FaceAlpha',0.1);
+
+[T,X4] = meshgrid(time(1):time(end),V_3(4):V_4(4));
+P2_fun1 = V_3(2) + 0*X4;
+surf(T,P2_fun1,X4, 'FaceAlpha',0.1);
+
+xlabel('t');
+ylabel('x_2');
+zlabel('x_4');
+hold off
