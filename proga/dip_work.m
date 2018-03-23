@@ -32,7 +32,6 @@ K2 = @(x) K(x,u_max);
 
 delta_t = 10^(-5);
 
-
 %%
 P_min = P(u_min);
 P_max = P(u_max);
@@ -100,42 +99,67 @@ legend('K_1','K_2', 'switches');
 grid minor
 
 %%
-P_curr1 = P(u_min);
-P_curr2 = P(u_max);
+P_min = P(u_min);
+P_max = P(u_max);
 
 figure
-ax1 = subplot(2,2,1);
-plot(time, solut(1,:), time_switch, x_switch(1,:),'go');%,...
-    %[min(time) max(time)], [P_curr1(1), P_curr1(1)], 'r');
+ax1 = subplot(3,2,1);
+plot(time, solut(1,:), time_switch, x_switch(1,:),'go',...
+    [min(time) max(time)], [P_min(1), P_min(1)], 'r');
 xlabel('t');
 ylabel('x_1');
 legend('x_1(t)', 'switches');%,'P_1');
 grid minor    
 
-ax2 = subplot(2,2,2);
+ax2 = subplot(3,2,2);
 plot(time, solut(2,:), time_switch, x_switch(2,:),'go', ...
-    [min(time) max(time)], ones(1,2)*P_curr1(2), 'r', ...
-    [min(time) max(time)], ones(1,2)*P_curr2(2), 'r');
+    [min(time) max(time)], ones(1,2)*P_min(2), 'r', ...
+    [min(time) max(time)], ones(1,2)*P_max(2), 'r');
 xlabel('t');
 ylabel('x_2');
 legend('x_2(t)', 'switches','P_2');
 grid minor  
 
-ax3 = subplot(2,2,3);
+ax3 = subplot(3,2,3);
 plot(time, solut(3,:), time_switch, x_switch(3,:),'go', ...
-    [min(time) max(time)], ones(1,2)*P_curr1(3),'r');
+    [min(time) max(time)], ones(1,2)*P_min(3),'r');
 xlabel('t');
 ylabel('x_3');
 legend('x_3(t)', 'switches','P_3');
 grid minor  
 
-ax4 = subplot(2,2,4);
+ax4 = subplot(3,2,4);
 plot(time, solut(4,:), time_switch, x_switch(4,:),'go', ...
-    [min(time) max(time)], ones(1,2)*P_curr1(4), 'r', ...
-    [min(time) max(time)], ones(1,2)*P_curr2(4), 'r');
+    [min(time) max(time)], ones(1,2)*P_min(4), 'r', ...
+    [min(time) max(time)], ones(1,2)*P_max(4), 'r');
 xlabel('t');
 ylabel('x_4');
 legend('x_4(t)', 'switches','P_4');
 grid minor  
 
+ax5 = subplot(3,2,5);
+plot(solut(2,mom_switch(end):end), solut(4,mom_switch(end):end), x_switch(2,:), x_switch(4,:), 'go',...
+    [P_min(2) P_max(2)], [P_min(4) P_max(4)], 'r')
+
+xlabel('x_2');
+ylabel('x_4');
+legend('x_4(x_2)', 'switches','P_2 P_4');
+grid minor
+
 linkaxes([ax4,ax3,ax2,ax1],'x'); 
+
+%%
+figure
+hold on
+plot3(time(mom_switch(end):end), solut(2,mom_switch(end):end), solut(4,mom_switch(end):end), 'b')
+
+[T,X2] = meshgrid(time,P_min(2):P_max(2));
+
+P4_fun = (c(3)*X2 - r(3))/b(3);
+surf(T,X2,P4_fun, 'FaceAlpha',0.3)
+
+xlabel('t');
+ylabel('x_2');
+zlabel('x_4');
+hold off
+
