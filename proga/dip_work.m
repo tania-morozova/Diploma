@@ -112,6 +112,11 @@ K_ev2 = zeros(1,len);
 K_ev3 = zeros(1,len);
 K_ev4 = zeros(1,len);
 
+K1_lim = K1(P(u_min));
+K2_lim = K2(P([u_max(1),u_min(2)]));
+K3_lim = K3(P([u_min(1),u_max(2)]));
+K4_lim = K4(P(u_max));
+
 for i = 1:len
     K_ev1(i) = K1(solut(:,i));
     K_ev2(i) = K2(solut(:,i));
@@ -129,6 +134,9 @@ plot(time, K_ev3, 'g', time_switch1, K_ev3(mom_switch1), 'c*', ...
     time_switch2, K_ev3(mom_switch2), 'm*');
 plot(time, K_ev4, 'k', time_switch1, K_ev4(mom_switch1), 'c*', ...
     time_switch2, K_ev4(mom_switch2), 'm*');
+se = [time(1) time(end)];
+plot(se, [K1_lim K1_lim], 'r--', se, [K2_lim K2_lim], 'b--', ...
+    se, [K3_lim K3_lim], 'g--', se, [K4_lim K4_lim], 'k--');
 xlabel('t');
 ylabel('K');
 legend('K_1','sw1','sw2','K_2','sw1','sw2','K_3','sw1','sw2','K_4','sw1','sw2');
