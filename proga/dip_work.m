@@ -42,23 +42,26 @@ delta_t = 10^(-5);
 %%
 
 P_curr = P(u_min);
-f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P_curr);
+f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P,r,b,c);
 
 options = odeset('Events',@(t,x)events_func(t,x,P_curr));
 
 sol = ode45(@(t,x) f_s(t,x), t_0:delta_t:t_1, x_0, options);
 solut = sol.y;      %trajectory
 time = sol.x;       
-mom_switch1 = numel(time);       %for display of switch moments
-mom_switch2 = numel(time);
+      %for display of switch moments
+mom_switch1 = [];
+mom_switch2 = [];
 time_switch1 = [];
 time_switch2 = [];
 x_switch1 = [];
 x_switch2 = [];
 if sol.ie == 1
+    mom_switch1 = numel(time); 
     time_switch1 = time(end);
     x_switch1 = solut(:,end);
 else
+    mom_switch2 = numel(time);
     time_switch2 = time(end);
     x_switch2 = solut(:,end);
 end
@@ -73,11 +76,22 @@ while sol.ie
     solut = [solut, sol.y];
     time = [time, sol.x];
     if sol.ie == 1
-        mom_switch1 = [mom_switch1, mom_switch1(end) + numel(sol.x)];
+        if isempty(mom_switch1)
+            mom_temp = 1;
+        else
+            mom_temp = mom_switch1(end);
+        end
+        
+        mom_switch1 = [mom_switch1, mom_temp + numel(sol.x)];
         time_switch1 = [time_switch1, time(end)];
         x_switch1 = [x_switch1, solut(:,end)];
     else
-        mom_switch2 = [mom_switch2, mom_switch2(end) + numel(sol.x)];
+        if isempty(mom_switch2)
+            mom_temp = 1;
+        else
+            mom_temp = mom_switch2(end);
+        end
+        mom_switch2 = [mom_switch2, mom_temp + numel(sol.x)];
         time_switch2 = [time_switch2, time(end)];
         x_switch2 = [x_switch2, solut(:,end)];
     end
@@ -147,7 +161,7 @@ grid minor
 
 ax3 = subplot(2,2,3);
 plot(time, solut(3,:), time_switch1, x_switch1(3,:),'co', ...
-    time_switch2, x_switch2(4,:),'mo',...
+    time_switch2, x_switch2(3,:),'mo',...
     [min(time) max(time)], ones(1,2)*P_curr1(3),'r');
 xlabel('t');
 ylabel('x_3');
