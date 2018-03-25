@@ -4,12 +4,12 @@ clc
 %nobody extincts?
 r = [1,1,1,1]';
 b = [1,1,1,0]';
-c = [0,1,1,1]';
+c = [0,1,3,1]';
 u_min1 = [1,0];
 u_max1 = [2,0];
 
-u_min = [1,-0.5];
-u_max = [2,2];
+u_min = [10,-0.5];
+u_max = [20,2];
 
 x_0 = [10,1,3,1]';
 
@@ -28,19 +28,18 @@ P = @(u) [(r(2)*c(4) + b(2)*r(4))/(c(4)*c(2)); ...
      r(4)/c(4); ...
      (c(3)*(r(1) + u(1))+(u(2) - r(3))*b(1))/(b(1)*b(3))];
 
-P_min = P(u_min);
-ok = P_min(4) > 0 %requirement for parameters
+ 
+V1 = P(u_min);
+V2 = P([u_max(1),u_min(2)]);
+V3 = P([u_min(1),u_max(2)]);
+V4 = P(u_max); 
+ok = V1(4) > 0 %requirement for parameters
 
 K = @(x,u) KK(x,u,P,b,c);
 K1 = @(x) K(x,u_min);
 K2 = @(x) K(x,[u_max(1),u_min(2)]);
 K3 = @(x) K(x,[u_min(1),u_max(2)]);
 K4 = @(x) K(x,u_max);
-
-V1 = P(u_min);
-V2 = P([u_max(1),u_min(2)]);
-V3 = P([u_min(1),u_max(2)]);
-V4 = P(u_max);
 
 delta_t = 10^(-5);
 
