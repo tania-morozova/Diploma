@@ -8,10 +8,10 @@ c = [0,1,1,1]';
 u_min = 1;
 u_max = 2;
 
-x_0 = [10,1,1,1]';
+x_0 = [2,2.39,1,1.5]';
 
 t_0 = 0;
-t_1 = 50;
+t_1 = 15;
 
 %%
 
@@ -42,6 +42,7 @@ elseif x_0(1) < P_curr(1)
     u_curr = u_max;
 else disp('x_0 = P_1');
 end
+%x_0(3:4) = [P_min(3); 1.5];
 
 f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P,r,b);
 
