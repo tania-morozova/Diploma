@@ -5,31 +5,14 @@ clc
 r = [1,1,1,1]';
 b = [1,1,1,0]';
 c = [0,1,3,1]';
-u_min1 = [1,0];
-u_max1 = [2,0];
 
-u_min = [10,-0.5];
+u_min = [10,0];
 u_max = [20,2];
 
-x_0 = [10,1,3,1]';
+x_0 = [2,15,1,1]';
 
 t_0 = 0;
 t_1 = 30;
-
-%%
-r = [1,1,1,1]';
-b = [1,1,1,0]';
-c = [0,1,1,1]';
-u_min1 = [1,0];
-u_max1 = [2,0];
-
-u_min = [10,-0.5];
-u_max = [20,2];
-
-x_0 = [2,2.39,1,1.5]';
-
-t_0 = 0;
-t_1 = 15;
 
 %%
 
@@ -63,7 +46,7 @@ delta_t = 10^(-5);
 P_curr = P(u_min);
 f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P,r,b,c);
 
-options = odeset('Events',@(t,x)events_func(t,x,P_curr));
+options = odeset('Events',@(t,x)events_func(t,x,P_curr), 'MaxStep', 1e-2);
 
 sol = ode45(@(t,x) f_s(t,x), t_0:delta_t:t_1, x_0, options);
 solut = sol.y;      %trajectory
