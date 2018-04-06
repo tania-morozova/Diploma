@@ -17,6 +17,21 @@ t_0 = 0;
 t_1 = 30;
 
 %%
+r = [1,1,1,1]';
+b = [1,1,1,0]';
+c = [0,1,1,1]';
+u_min1 = [1,0];
+u_max1 = [2,0];
+
+u_min = [10,-0.5];
+u_max = [20,2];
+
+x_0 = [2,2.39,1,1.5]';
+
+t_0 = 0;
+t_1 = 15;
+
+%%
 
 f = @(t,x,u) [x(1).*(r(1) + u(1) - b(1).*x(2)); ...
             x(2).*(-r(2) - b(2).*x(3) + c(2).*x(1));...
@@ -130,14 +145,14 @@ end
 
 figure
 hold on
-plot(time, K_ev1, 'r', time_switch1, K_ev1(mom_switch1), 'c*', ...
-    time_switch2, K_ev1(mom_switch2), 'm*');
-plot(time, K_ev2, 'b', time_switch1, K_ev2(mom_switch1), 'c*', ...
-    time_switch2, K_ev2(mom_switch2), 'm*');
-plot(time, K_ev3, 'g', time_switch1, K_ev3(mom_switch1), 'c*', ...
-    time_switch2, K_ev3(mom_switch2), 'm*');
-plot(time, K_ev4, 'k', time_switch1, K_ev4(mom_switch1), 'c*', ...
-    time_switch2, K_ev4(mom_switch2), 'm*');
+plot(time, K_ev1, 'r', time(mom_switch1), K_ev1(mom_switch1), 'c*', ...
+    time(mom_switch2), K_ev1(mom_switch2), 'm*');
+plot(time, K_ev2, 'b', time(mom_switch1), K_ev2(mom_switch1), 'c*', ...
+    time(mom_switch2), K_ev2(mom_switch2), 'm*');
+plot(time, K_ev3, 'g', time(mom_switch1), K_ev3(mom_switch1), 'c*', ...
+    time(mom_switch2), K_ev3(mom_switch2), 'm*');
+plot(time, K_ev4, 'k', time(mom_switch1), K_ev4(mom_switch1), 'c*', ...
+    time(mom_switch2), K_ev4(mom_switch2), 'm*');
 se = [time(1) time(end)];
 plot(se, [K1_lim K1_lim], 'r--', se, [K2_lim K2_lim], 'b--', ...
     se, [K3_lim K3_lim], 'g--', se, [K4_lim K4_lim], 'k--');
