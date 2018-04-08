@@ -9,10 +9,10 @@ c = [0,1,3,1]';
 u_min = [10,0];
 u_max = [20,2];
 
-x_0 = [2,15,1,1]';
+x_0 = [2,15,1,40]';
 
 t_0 = 0;
-t_1 = 30;
+t_1 = 50;
 
 %%
 
@@ -45,6 +45,8 @@ delta_t = 10^(-5);
 
 P_curr = P(u_min);
 f_s = @(t,x)f_synth(t,x,u_min,u_max,f,P,r,b,c);
+f_s(0,x_0)
+%%
 
 options = odeset('Events',@(t,x)events_func(t,x,P_curr), 'MaxStep', 1e-2);
 
@@ -107,6 +109,18 @@ mom_switch2 = mom_switch2(1:end-1);
 time_switch2 = time_switch2(1:end-1);
 x_switch2 = x_switch2(:,1:end-1);
 
+%%
+%for display
+if isempty(mom_switch1)
+    mom_switch1 = 1;
+    time_switch1 = t_0;
+    x_switch1 = x_0;
+end
+if isempty(mom_switch2)
+    mom_switch2 = 1;
+    time_switch2 = t_0;
+    x_switch2 = x_0;
+end
 %%
 len = numel(solut(1,:));
 K_ev1 = zeros(1,len);
@@ -228,3 +242,8 @@ xlabel('t');
 ylabel('x_2');
 zlabel('x_4');
 hold off
+
+%%
+plot([V1(2) V2(2)], [V1(4) V2(4)], 'r', [V2(2) V4(2)], [V2(4) V4(4)], 'r',...
+    [V4(2) V3(2)], [V4(4) V3(4)], 'r', [V3(2) V1(2)], [V3(4) V1(4)], 'r', x_0(2),x_04, 'g*');
+grid minor
