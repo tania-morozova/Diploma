@@ -1,16 +1,16 @@
 clear
 clc
-%%
+%% x1=p1, x3=p3
 r = [1,1,1,1]';
 b = [1,1,1,0]';
 c = [0,1,1,1]';
-u_min = [1 1];
-u_max = [2 2];
+u_min = [1,1.5];
+u_max = [2,2];
 
-x_0 = [3,10,10,10]';
+x_0 = [2,5,1,5]';
 
 t_0 = 0;
-t_1 = 50;
+t_1 = 10;
 
 %%
 
@@ -157,6 +157,11 @@ legend('K_1','sw1','sw2','K_2','sw1','sw2','K_3','sw1','sw2','K_4','sw1','sw2');
 grid minor
 hold off
 
+%% d2
+
+d2_min = (c(3)*solut(2,:) + u_min(2) - r(3))/(b(3));
+d2_max = (c(3)*solut(2,:) + u_max(2) - r(3))/(b(3));
+
 %%
 
 figure
@@ -189,12 +194,15 @@ legend('x_3(t)', 'switches1','switches2','P_3');
 grid minor  
 
 ax4 = subplot(3,2,4);
+% plot(time, solut(4,:), time_switch1, x_switch1(4,:),'co',...
+%     time_switch2, x_switch2(4,:),'mo',...
+%     [min(time) max(time)], [V1(4) V1(4)], 'r', ...
+%     [min(time) max(time)], [V3(4) V3(4)], 'r', ...
+%     [min(time) max(time)], [V2(4) V2(4)], 'k', ...
+%     [min(time) max(time)], [V4(4) V4(4)], 'k');
+
 plot(time, solut(4,:), time_switch1, x_switch1(4,:),'co',...
-    time_switch2, x_switch2(4,:),'mo',...
-    [min(time) max(time)], [V1(4) V1(4)], 'r', ...
-    [min(time) max(time)], [V3(4) V3(4)], 'r', ...
-    [min(time) max(time)], [V2(4) V2(4)], 'k', ...
-    [min(time) max(time)], [V4(4) V4(4)], 'k');
+     time_switch2, x_switch2(4,:),'mo', time, d2_min, 'r', time, d2_max, 'r'); 
 xlabel('t');
 ylabel('x_4');
 legend('x_4(t)', 'switches1','switches2')%,'P_4');
@@ -211,6 +219,11 @@ grid minor
 
 linkaxes([ax4,ax3,ax2,ax1],'x'); 
 
+%%
+figure
+plot(solut(1,1:mom_switch2(1)),solut(2,1:mom_switch2(1)), 'k', [V1(1) V1(1)],...
+    [V1(2) V2(2)],'r', solut(1,1), solut(2,1), 'g*');
+grid minor
 %%
 
 %mom_temp = min(mom_switch1(end),mom_switch2(end));
