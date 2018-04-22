@@ -1,3 +1,6 @@
+clear
+clc
+%%
 syms x1 x2 x3 x4 r1 r2 r3 r4 b1 b2 b3 c2 c3 c4 u1 u2
 
 dx1 = x1*(r1+u1-b1*x2);
